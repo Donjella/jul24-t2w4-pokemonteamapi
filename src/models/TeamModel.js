@@ -1,51 +1,45 @@
-const express = require("express");
-const router = express.Router();
+const mongoose = require("mongoose");
 
-//							  teamid is a MongoDB document/object ID
-// http://localhost:5678/team/one/-19038ryth2iwgvbn;saldvncjkasoivduwgsho
-router.get(
-	"/one/:teamid",  // route path 
-	async (request, response) => { // route final callback 
-		
-		response.json({
-			
-		});
+const PokemonSchema = new mongoose.Schema({
+	name: String, 
+	sprite: String,
+	types: {
+		type: [String],
+		validate:  [limitArrayLength(2), "Cannot have more than 2 types per Pokemon."]
+	},
+	level: {
+		type: Number,
+		min: 1,
+		max: 100
+	},
+});
+
+
+// Make a schema with data properties
+const TeamSchema = new mongoose.Schema({
+	pokemon: {
+		type: [PokemonSchema],
+		validate: [limitArrayLength(6), "Cannot have more than 6 Pokemon per team."]
+	},
+	trainer: {
+		type: mongoose.Types.ObjectId, 
+		ref: 'User',
+		required: false
 	}
-);
+});
 
-// http://localhost:5678/team/all
-router.get(
-	"/all",  // route path 
-	async (request, response) => { // route final callback 
-		
-		response.json({
-			
-		});
+function limitArrayLength(limit){
+	return function (value) {
+		return value.length <= limit;
 	}
-);
+}
 
-// http://localhost:5678/team/
-router.post(
-	"/",  // route path 
-	async (request, response) => { // route final callback 
-		
-		response.json({
-			
-		});
-	}
-);
 
-// http://localhost:5678/team/
-router.post(
-	"/",  // route path 
-	async (request, response) => { // route final callback 
-		
-		response.json({
-			
-		});
-	}
-);
+// Make a model that uses the schema 
+//								Name in DB, schema to use for its validation rules 
+const TeamModel = mongoose.model('Team', TeamSchema);
 
+// Export the model 
 module.exports = {
-	TeamRouter: router
+	TeamModel
 }
