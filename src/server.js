@@ -6,7 +6,7 @@ const express = require("express");
 // Create an instance of the Expres system 
 const app = express();
 
-// lets us send in JSON as body data on a request
+// Lets us send in JSON as body data on a request 
 app.use(express.json());
 
 const mongoose = require("mongoose");
@@ -46,11 +46,6 @@ app.get("/", (request, response) => {
 	});
 });
 
-app.get("/databaseHealth", (request, response) => {
-	response.json({
-		name: mongoose.connection.na
-	});
-});
 app.get("/databaseHealth", (request, response) => {
 	// Data from Mongoose: 
 	// https://mongoosejs.com/docs/api/connection.html
